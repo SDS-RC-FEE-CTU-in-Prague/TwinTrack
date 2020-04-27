@@ -1,0 +1,7 @@
+addpath('../functions/')
+addpath('../functions/rot_matrices/')
+addpath('../functions/RealTime_Pacer/')
+addpath('../functions/ephysenetini_stuff/')
+addpath('../lib/')
+addpath('./')
+disp('Path updated')

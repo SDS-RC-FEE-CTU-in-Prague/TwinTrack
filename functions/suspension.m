@@ -1,24 +1,24 @@
-function [ F_R,k,alpha,Fx,Mz,VTRi_steered,RiTV_steered,VTE,deltas_l,d_deltas_l,My ] = suspension(car,v,omega,euler,euler_rates,deltas_steer,dro,position_earth, Fz_disturbance)
-%UNTITLED2 Summary of this function goes here
+function [ F_R,k,alpha,Fx,Mz,VTRi_steered,RiTV_steered,VTE,deltas_l,d_deltas_l,My ]...
+    = suspension(car,v,omega,euler,euler_rates,delta_steering,dro,position_earth, Fz_scaling)
+%suspension(car,v,omega,euler,euler_rates,delta_steering,dro,position_earth, Fz_scaling)
+%calculates suspension forces acting on the vehicle chassis
 % Inputs
 %   car = structure containing the car parameters
-%   v = [vx;vy;vz]              vehicle-fixed coordinates
-%   omega = [wx;wy;wz]          vehicle-fixed coordinates
-%   euler = [roll;pitch;yaw]    inertial-fixed coordinates
-%   deltas_l
-%   d_deltas_l
-%   deltas_steer
-%   dro = 1x4 vector of vehicle speeds
-%   Fz_disturbance - input for disturbances of normal force acting on wheels.
-%   Has 4 values (one for each wheel) that are greater than 0. 1 means 100%
-%   of nominal normal force (acts as no disturbance case).
+%   v = [vx;vy;vz]                                  vehicle-fixed coordinates
+%   omega = [wx;wy;wz]                              vehicle-fixed coordinates
+%   euler = [roll;pitch;yaw]                        inertial-fixed coordinates
+%   euler_rates                                     inertial-fixed coordinates
+%   delta_steering = [4x1] vector of steering angles
+%   dro = [4x1] vector of wheel angular rates       wheel-fixed coordinates
+%   position_earth = [3x1] vector of CG position    inertial-fixed coordinates
+%   Fz_scaling - [4x1] vector. Tire normal forces are multiplied by this.
 
 VTE =  Rot_VTE(euler);  % earth -> vehicle
 ETV = VTE'; % TODO can I really just transpose this?
 
 RiTV = nan(3,3,4);
 for i=1:4
-    RiTV(:,:,i) = Rot_RiTV(euler(1),euler(2),deltas_steer(i));
+    RiTV(:,:,i) = Rot_RiTV(euler(1),euler(2),delta_steering(i));
 end
 RiTV_steered = RiTV(:,:,1);
 VTRi_steered = RiTV_steered';
@@ -51,9 +51,9 @@ V_FF = nan(3,4);    % spring force
 F_load = nan(1,4);  % load o wheels
 
 for i=1:4
-    pom = -((ca(i) * deltas_l(i)) + (da(i)*d_deltas_l(i)));
-    V_FF(:,i) = pom*VTE*[0;0;1];
-    F_load(i) = pom*Fz_disturbance(i);
+    spring_force = -((ca(i) * deltas_l(i)) + (da(i)*d_deltas_l(i)));
+    V_FF(:,i) = spring_force*VTE*[0;0;1];
+    F_load(i) = spring_force*Fz_scaling(i);
 end
 
 

@@ -65,22 +65,15 @@ switch round(car.tire_select) % floor is used to fix weird rounding error when l
             otherwise
                 [ Fx,Fy,Mz,My,Mx,k,a ] = pacejka2002(Vx,Vy,omega,Re,car.r,gamma,Fz,0,0,0,'R');
         end
-        
-        
-        
+
     otherwise
-        Fx = 0;Fy = 0;Mz = 0;My = 0;Mx = 0;
+        default_tire();
+        error('Wrong car.tire_select');
 end
 end
 
 %% -------------------------------------------------------------------------------
-%% wrap functions for tire models that don't have output in format [Fx,Fy,Mz,My,Mx]
-
-function [ Fx,Fy,Mz,My,Mx ] = pacejka_combined_slip_wrap(k,a,Fz,Fz0,Pac_const_x,Pac_const_y,Pac_const_mz,Mx,My)
-[Fx,Fy,Mz] = pacejka_combined_slip(k,a,Fz,Fz0,Pac_const_x,Pac_const_y,Pac_const_mz);
-end
-
-function [ Fx,Fy,Mz,My,Mx ] = default_tire()
-Fx = 0;Fy = 0;Mz = 0;My = 0;Mx = 0;
+function [ Fx,Fy,Mz,My,Mx,k,a ] = default_tire()
+        Fx = 0;Fy = 0;Mz = 0;My = 0;Mx = 0; k = 0; a = 0;
 end
 

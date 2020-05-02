@@ -7,5 +7,6 @@ The derivation of the model can be found in [TT_derivation.pdf](TT_derivation.pd
 ## Usage
 
 1. Add the whole folder to the MATLAB path
-2. Run MODEL.slx
+2. Run Init_car.m
+3. Run MODEL.slx
 
